@@ -29,8 +29,10 @@ from fastdbf import to_df
 df = to_df(filename)
 ```
 
+Deleted records (marked with '*' in DBF) are not included in the output.
+
 Load multiple DBF files using `multi_df`;
-this function will look for the specified file name case-insensitive in all directories.
+this function will look for the specified file name case-insensitive in all directories;
 the files will be loaded concurrently using `to_df` and `concurrent.futures.ProcessPoolExecutor`;
 the resulting DataFrames are merged using `pandas.concat`.
 
@@ -56,3 +58,35 @@ fastdbf:
 INFO:root:Benchmark -- fastdbf-DataFrame: started
 INFO:root:Benchmark -- fastdbf-DataFrame: 1010 ms
 ```
+
+## Supported DBF field types
+
+See these sites for information on DBF field types:
+
+- http://www.dbase.com/KnowledgeBase/int/db7_file_fmt.htm
+- https://www.dbf2002.com/dbf-file-format.html
+- http://www.independent-software.com/dbase-dbf-dbt-file-format.html
+
+Supported types:
+
+| Type code   | Type                    | 
+| ----------- | ----------------------- |
+| C           | Text                    |
+| D           | Date                    |
+| N, F        | Numeric                 |
+| L           | Boolean                 |
+| I           | Integer                 |
+
+Unsupported types:
+
+| Type code   | Type                    | 
+| ----------- | ----------------------- |
+| B           | Binary                  |
+| M           | Memo                    |
+| @           | Timestamp               |
+| O           | Double                  |
+| G           | OLE                     |
+| Y           | Currency                |
+| T           | Datetime                |
+| P           | Picture                 |
+| V           | Varchar                 |

@@ -10,3 +10,4 @@ testdata
 .vscode
 .vs
 *.prof
+*.pyd

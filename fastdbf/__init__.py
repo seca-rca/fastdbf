@@ -160,6 +160,7 @@ def to_df(file_name, keep=None, lowernames=True):
                 'C': fd.load_c,
                 'D': fd.load_d,
                 'N': fd.load_n,
+                'F': fd.load_n,
                 'L': fd.load_l,
                 'I': fd.load_i
             }
@@ -168,6 +169,7 @@ def to_df(file_name, keep=None, lowernames=True):
                 'C': lambda len: f"U{len:d}", # UTF-32 native
                 'D': lambda len: 'M8[D]', # converted from string, native
                 'N': lambda len: 'f4', # strtof, native
+                'F': lambda len: 'f4', # strtof, native
                 'L': lambda len: '?', # stored as 1-byte, converted from string
                 'I': lambda len: '=i4' # memcpy, defined as little endian, see http://www.independent-software.com/dbase-dbf-dbt-file-format.html
             }
@@ -178,6 +180,7 @@ def to_df(file_name, keep=None, lowernames=True):
             parser = {
                 'C': _parse_c,
                 'D': _parse_d,
+                'F': _parse_n,
                 'N': _parse_n,
                 'L': _parse_l,
                 'I': _parse_i
@@ -186,6 +189,7 @@ def to_df(file_name, keep=None, lowernames=True):
             dtypes = {
                 'C': lambda len: f"U{len:d}",
                 'D': lambda len: 'M8[D]',
+                'F': lambda len: 'f4',
                 'N': lambda len: 'f4',
                 'L': lambda len: '?',
                 'I': lambda len: 'i4'
@@ -198,8 +202,7 @@ def to_df(file_name, keep=None, lowernames=True):
 
         while True:
             m.seek(offset)
-            eol = m.read(1)
-            if eol in (b'\r'):
+            if m.read(1) == b'\r':
                 break
 
             field = dict(zip(field_keys, field_values.unpack_from(m, offset)))
@@ -215,6 +218,14 @@ def to_df(file_name, keep=None, lowernames=True):
         columns = {}
         recordlen = header['recordlen']
         numrecords = header['numrecords']
+
+        offset = header['headerlen']
+        mask = np.ones(numrecords, dtype='?')
+
+        for i in range(numrecords):
+            m.seek(offset + i * recordlen)
+            if m.read(1) == b'*':
+                mask[i] = False
 
         for field in fields:
             offset = header['headerlen'] + field['address']
@@ -236,6 +247,8 @@ def to_df(file_name, keep=None, lowernames=True):
                     m.seek(offset + i * recordlen)
                     arr[i] = parser_func(m.read(field_length))
             
+            arr = arr[mask]
+
             if field_type == 'D':
                 columns[field_name] = pd.to_datetime(arr, errors='coerce')
             elif field_type == 'C':

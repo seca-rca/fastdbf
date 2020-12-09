@@ -28,12 +28,8 @@ def test_fastdbf(filename):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Benchmarkt DBF readers.')
     parser.add_argument('adapter', help='which DBF reader to use', choices=['dbfread', 'fastdbf'])
-    parser.add_argument('--filename', help='DBF file to use', default=os.path.join(os.getcwd(), "testdata", "pohyby.DBF"))
-    parser.add_argument('--local', help="use current path module (add cwd to sys.path)", default=False)
+    parser.add_argument('--filename', help='DBF file to use', default=os.path.join(os.path.dirname(__file__), "testdata", "pohyby.DBF"))
     
     args = parser.parse_args()
-
-    if args.local:
-        sys.path.insert(0, '.')
 
     locals()["test_" + args.adapter](args.filename)
