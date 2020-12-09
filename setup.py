@@ -36,7 +36,7 @@ Operating System :: MacOS :: MacOS X
 
 setup(
     name='fastdbf',
-    version='0.1.5',
+    version='0.1.6',
     description='Read DBF Files with C and Python, fast.',
     long_description='Reads DBF files into a pandas DataFrame using a C extension when available, or a fallback pure Python parser.',
     author='Raphael Campestrini',
@@ -49,6 +49,9 @@ setup(
     python_requires='>=3.6',
     url="https://pypi.python.org/pypi/fastdbf",
     download_url="https://pypi.python.org/pypi/fastdbf",
+    project_urls={
+            "Source Code": "https://github.com/seca-rca/fastdbf",
+    },
     install_requires=[
         'pandas',
         'numpy'
