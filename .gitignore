@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+*.pyo
+*~
+.cache/
+/dist/
+/build/
+/*.egg-info/
+testdata
+.vscode
+.vs
+*.prof
