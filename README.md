@@ -14,6 +14,20 @@ Ubuntu / Debian:
 # apt install libicu-dev
 ```
 
+Windows 10:
+
+ICU is included, see: https://docs.microsoft.com/en-us/windows/win32/intl/international-components-for-unicode--icu-
+
+Windows < 10:
+
+Download here: https://github.com/unicode-org/icu/releases/latest
+
+FreeBSD:
+
+```sh
+# pkg install icu
+```
+
 ### PyPi package
 
 ```sh

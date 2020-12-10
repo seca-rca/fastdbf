@@ -6,8 +6,9 @@ __pycache__
 /dist/
 /build/
 /*.egg-info/
-testdata
+testdata/*
 .vscode
 .vs
 *.prof
 *.pyd
+!testdata/test.dbf
